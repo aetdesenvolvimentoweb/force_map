@@ -8,9 +8,20 @@ datasource db {
 }
 
 model Graduation {
-  id    String @id @default(auto()) @map("_id") @db.ObjectId
-  order Int
-  name  String @unique
+  id       String     @id @default(auto()) @map("_id") @db.ObjectId
+  order    Int
+  name     String     @unique
+  Military Military[]
 
   @@map("graduations")
+}
+
+model Military {
+  id           String     @id @default(auto()) @map("_id") @db.ObjectId
+  graduationId String     @db.ObjectId
+  rg           Int        @unique
+  name         String     @unique
+  graduation   Graduation @relation(fields: [graduationId], references: [id])
+
+  @@map("military")
 }
