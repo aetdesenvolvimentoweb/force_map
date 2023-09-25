@@ -13,6 +13,12 @@ export class ServiceDeleteGraduation {
       throw new Error("Identificador da graduação inválido.");
     }
 
+    const graduation = await this.graduationRepository.getById(id);
+
+    if (!graduation) {
+      throw new Error("Graduação não encontrada.");
+    }
+
     await this.graduationRepository.delete(id);
   };
 }
