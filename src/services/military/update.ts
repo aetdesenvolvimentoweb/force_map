@@ -5,7 +5,7 @@ export class ServiceUpdateMilitary {
   constructor(private militaryRepository: IMilitaryRepositoryDTO) {}
 
   public execute = async (data: IMilitaryDTO): Promise<void> => {
-    if (data.id) {
+    if (!data.id) {
       throw new Error("Identificador do militar não encontrado.");
     }
 
@@ -27,6 +27,13 @@ export class ServiceUpdateMilitary {
 
     if (!data.name) {
       throw new Error("Preencha o campo nome.");
+    }
+
+    const militaryExist = await this.militaryRepository.getById(data.id);
+    console.log(militaryExist);
+
+    if (!militaryExist) {
+      throw new Error("Militar não encontrado.");
     }
 
     const rgAlreadyRegistered = await this.militaryRepository.getByRg(data.rg);

@@ -13,6 +13,12 @@ export class ServiceDeleteMilitary {
       throw new Error("Identificador do militar inválido.");
     }
 
+    const military = await this.militaryRepository.getById(id);
+
+    if (!military) {
+      throw new Error("Militar não encontrado.");
+    }
+
     await this.militaryRepository.delete(id);
   };
 }
