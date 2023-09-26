@@ -51,6 +51,24 @@ export class MilitaryRepository implements IMilitaryRepositoryDTO {
     });
   };
 
+  changePassword = async (id: string, newPassword: string): Promise<void> => {
+    await db.military.update({
+      where: { id },
+      data: {
+        password: newPassword,
+      },
+    });
+  };
+
+  recoveryPassword = async (rg: number, newPassword: string): Promise<void> => {
+    await db.military.update({
+      where: { rg },
+      data: {
+        password: newPassword,
+      },
+    });
+  };
+
   delete = async (id: string): Promise<void> => {
     await db.military.delete({ where: { id } });
   };

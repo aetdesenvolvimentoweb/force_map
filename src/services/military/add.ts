@@ -2,6 +2,7 @@ import {
   ICreateMilitaryDTO,
   IMilitaryRepositoryDTO,
 } from "@/interfaces/IMilitary";
+import { hashPassword } from "@/lib/bcrypt";
 import { ObjectId } from "mongodb";
 
 export class ServiceAddMilitary {
@@ -24,6 +25,10 @@ export class ServiceAddMilitary {
       throw new Error("Preencha o campo nome.");
     }
 
+    if (!data.password) {
+      throw new Error("Preencha o campo senha.");
+    }
+
     const rgAlreadyRegistered = await this.militaryRepository.getByRg(data.rg);
 
     if (rgAlreadyRegistered) {
@@ -38,6 +43,8 @@ export class ServiceAddMilitary {
       throw new Error("Já existe um militar cadastrado com esse nome.");
     }
 
-    await this.militaryRepository.add(data);
+    const hashedPassword = await hashPassword(data.password);
+
+    await this.militaryRepository.add({ ...data, password: hashedPassword });
   };
 }

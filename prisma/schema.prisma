@@ -11,7 +11,7 @@ model Graduation {
   id       String     @id @default(auto()) @map("_id") @db.ObjectId
   order    Int
   name     String     @unique
-  Military Military[]
+  military Military[]
 
   @@map("graduations")
 }
@@ -21,7 +21,22 @@ model Military {
   graduationId String     @db.ObjectId
   rg           Int        @unique
   name         String     @unique
+  password     String
   graduation   Graduation @relation(fields: [graduationId], references: [id])
+  session      Session[]
 
   @@map("military")
+}
+
+model Session {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  militaryId   String   @unique @db.ObjectId
+  ip           String
+  sessionToken String
+  expires      DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  military     Military @relation(fields: [militaryId], references: [id])
+
+  @@map("sessions")
 }

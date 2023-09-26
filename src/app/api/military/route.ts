@@ -2,6 +2,7 @@ import { ICreateMilitaryDTO, IMilitaryDTO } from "@/interfaces/IMilitary";
 import { MilitaryRepository } from "@/repositories/military";
 import { ServiceAddMilitary } from "@/services/military/add";
 import { ServiceGetAllMilitary } from "@/services/military/getAll";
+import { ServiceRecoveryPassword } from "@/services/military/recoverPassword";
 import { ServiceUpdateMilitary } from "@/services/military/update";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -47,6 +48,28 @@ export const PUT = async (req: NextRequest) => {
     const serviceUpdateMilitary = new ServiceUpdateMilitary(militaryRepository);
 
     await serviceUpdateMilitary.execute(data);
+
+    return NextResponse.json({ success: true }, { status: 200 });
+  } catch (err: any) {
+    return NextResponse.json(
+      { success: false, error: err.message },
+      { status: 400 }
+    );
+  }
+};
+
+export const PATCH = async (req: NextRequest) => {
+  try {
+    const data = await req.json();
+
+    const militaryRepository = new MilitaryRepository();
+    const serviceRecoveryPassword = new ServiceRecoveryPassword(
+      militaryRepository
+    );
+
+    await serviceRecoveryPassword.execute({
+      rg: data.rg,
+    });
 
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (err: any) {
